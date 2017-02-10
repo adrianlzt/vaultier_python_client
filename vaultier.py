@@ -37,7 +37,7 @@ class DataCypher(object):
         https://github.com/Shani-08/ShaniXBMCWork2/blob/master/plugin.video.serialzone/jscrypto.py
         """
         target_key_size = key_size + iv_size
-        derived_bytes = ""
+        derived_bytes = b''
         number_of_derived_words = 0
         block = None
         hasher = hashlib.new(hash_algorithm)
@@ -96,7 +96,7 @@ class DataCypher(object):
         aes = AES.new(key, MODE, iv)
         decrypted_text = aes.decrypt(encrypted_text_bytes)
         encoder = PKCS7Encoder()
-        unpad_text = encoder.decode(decrypted_text)
+        unpad_text = encoder.decode(decrypted_text.decode('utf-8'))
 
         return unpad_text
 
@@ -167,7 +167,7 @@ if __name__ == "__main__":
     server_time = requests.get("%s/server-time/" % server, verify=False)
     date = server_time.json().get("datetime")
 
-    h = SHA.new(email + date)
+    h = SHA.new(str(email + date).encode('utf-8'))
     signature = wc.sign(h)
     signature_b64 = binascii.b2a_base64(signature)
 
